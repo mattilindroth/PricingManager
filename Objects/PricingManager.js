@@ -40,7 +40,6 @@ class PricingManager {
 			//Calculate discount in currency
 			let productUnitPrice = product[0].price;
 			let quantity = oneProduct.quantity;
-			console.log("product unit price: " + productUnitPrice + " and quantity: " + quantity);
 			discounts.forEach(oneDiscount => {
 				let discount = oneDiscount.CalculateDiscount(productUnitPrice * quantity, oneProduct.productId, purchaseOrder.customerId);
 				totalDiscount += discount;

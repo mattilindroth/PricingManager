@@ -15,6 +15,11 @@ Remove = function( id ) {
 	activeDiscounts.splice(id - 1, 1);
 }
 
+Clean = function() {
+    while(activeDiscounts.length > 0)
+        activeDiscounts.pop();
+}
+
 GenerateDiscount = function( discount ) {
     
     let newDiscount = {};
@@ -27,7 +32,7 @@ GenerateDiscount = function( discount ) {
             newDiscount = new Discounts.SeasonDiscount(activeDiscounts.length, discount.discountPercentage, discount.seasonStartDate, discount.seasonEndDate );
             break;
         case Discounts.DiscountType.RegularCustomerDiscount:
-            newDiscount = new Discounts.RegularCustomerDiscount(activeDiscounts.length, discount.discountPercentage, discount.customerAmountOfSales );
+            newDiscount = new Discounts.RegularCustomerDiscount(activeDiscounts.length, discount.discountPercentage, discount.requiredAmountOfSales, discount.customerAmountOfSales, discount.customerId );
             break;
         case Discounts.DiscountType.ProductDiscount:
             newDiscount = new Discounts.ProductDiscount(activeDiscounts.length, discount.discountPercentage, discount.productId );
@@ -39,4 +44,4 @@ GenerateDiscount = function( discount ) {
 	return newDiscount;
 }
 
-module.exports = {activeDiscounts, Add, Length, Remove, GenerateDiscount}
+module.exports = {activeDiscounts, Add, Length, Remove, Clean, GenerateDiscount}
