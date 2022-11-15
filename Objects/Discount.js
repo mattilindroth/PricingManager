@@ -23,14 +23,14 @@ class SeasonDiscount extends Discount {
 	constructor( id, discountPercentage, seasonStartDate, seasonEndDate) {
 		super(id, discountPercentage);
 		
-		this.seasonStartDate = seasonStartDate;
-		this.seasonEndDate = seasonEndDate;
+		this.seasonStartDate = new Date(seasonStartDate).getTime();
+		this.seasonEndDate = new Date(seasonEndDate).getTime();
 	}
 
 	CalculateDiscount = function( price, productId, customerId ) {
 		let dateNow = Date.now();
 		let discount = 0.0;
-		if(thios.seasontStartDate >= dateNow && this.seasonEndDate <= dateNow) {
+		if(this.seasonStartDate <= dateNow && this.seasonEndDate >= dateNow) {
 			discount = price * (this.discountPercentage / 100);
 		}
 
@@ -40,14 +40,18 @@ class SeasonDiscount extends Discount {
 
 //Regular customer discount for regular customer who have purchased enough during the year
 class RegularCustomerDiscount extends Discount {
-	constructor( id, discountPercentage, requiredAmountOfSales, customerAmountOfSales) {
+	constructor( id, discountPercentage, requiredAmountOfSales, customerAmountOfSales, customerId) {
 		super(id, discountPercentage);
 		this.requiredAmountOfSales = requiredAmountOfSales;
 		this.customerAmountOfSales = customerAmountOfSales;
+		this.customerId = customerId;
 	}
 
 	CalculateDiscount = function( price, productId, customerId ) {
 		let discount = 0.0;
+		
+		if(this.customerId != customerId)
+			return discount;
 
 		if(this.customerAmountOfSales + price >= this.requiredAmountOfSales) {
 			discount = price * (this.discountPercentage / 100);
