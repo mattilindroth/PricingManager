@@ -8,11 +8,10 @@ class PurchaseProduct {
 
 class PurchaseOrder {
 
-	products = [];
+	products = new Array();
 
-	constructor( customerId, date ) {
+	constructor( customerId ) {
 		this.customerId = customerId;
-		this.date = date;
 	}
 
 	AddProduct( productId, quantity  ) {

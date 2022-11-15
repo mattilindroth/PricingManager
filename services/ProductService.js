@@ -2,26 +2,21 @@ const express = require('express');
 let router = express.Router();
 
 let Product = require("../Objects/Product.js");
-let products = new Array(
-    new Product.Product( 1, "Hammer", 12 ,6),
-    new Product.Product( 2, "Screwdriver", 7.5),
-    new Product.Product( 3, "Nailgun", 120),
-    new Product.Product( 4, "Angle grinder", 78.9)
-);
+let ProductRepository = require("../Repository/ProductRepository");
 
 router.get('/', function(req, res) {
-    res.json(products);
+    res.json(ProductRepository.products);
 });
 
 router.get('/:id', function(req, res) {
     let id = req.params.id;
-    if(id <= 0 || id > products.length ) {
+    if(id <= 0 || id > ProductRepository.products.length ) {
         res.status( 404 );
         res.json({message: "Not found"});
         return;
     }
 
-    res.json(products[ id -1 ]);
+    res.json(ProductRepository.products[ id -1 ]);
 });
 
 router.post('/', function(req, res) {
@@ -36,8 +31,8 @@ router.post('/', function(req, res) {
         res.json({message: "price cannot be empty"});
         return;
     }
-    let newProduct =new Product.Product( products.length + 1, parsedProduct.name, parsedProduct.price );
-    products.push( newProduct );
+    let newProduct =new Product.Product( ProductRepository.Length() + 1, parsedProduct.name, parsedProduct.price );
+    ProductRepository.Add( newProduct );
     res.json(newProduct);
 })
 

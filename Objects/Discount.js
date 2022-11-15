@@ -1,5 +1,13 @@
+const  DiscountType = {
+	SeasonDiscount: 1,
+	RegularCustomerDiscount: 2,
+	CustomerDiscount: 3,
+	ProductDiscount: 4
+};
+
+//Base class to determine behaviour (since we do not have interfaces)
 class Discount {
-	constructor( id, discounPercentage) {
+	constructor( id, discountPercentage ) {
 		this.id = id;
 		this.discountPercentage = discountPercentage;
 	}
@@ -9,7 +17,9 @@ class Discount {
 	}
 }
 
-class GeneralSeasonDiscount extends Discount {
+
+//Season based discount. Has start and end dates to determine if discount is applicable
+class SeasonDiscount extends Discount {
 	constructor( id, discountPercentage, seasonStartDate, seasonEndDate) {
 		super(id, discountPercentage);
 		
@@ -21,13 +31,14 @@ class GeneralSeasonDiscount extends Discount {
 		let dateNow = Date.now();
 		let discount = 0.0;
 		if(thios.seasontStartDate >= dateNow && this.seasonEndDate <= dateNow) {
-			discount = price * (discountPercentage / 100);
+			discount = price * (this.discountPercentage / 100);
 		}
 
 		return discount;
 	}
 }
 
+//Regular customer discount for regular customer who have purchased enough during the year
 class RegularCustomerDiscount extends Discount {
 	constructor( id, discountPercentage, requiredAmountOfSales, customerAmountOfSales) {
 		super(id, discountPercentage);
@@ -39,14 +50,15 @@ class RegularCustomerDiscount extends Discount {
 		let discount = 0.0;
 
 		if(this.customerAmountOfSales + price >= this.requiredAmountOfSales) {
-			discount = price * (discountPercentage / 100);
+			discount = price * (this.discountPercentage / 100);
 		}
 
 		return discount;
 	}
 }
 
-class CustomerSpecificDiscount extends Discount {
+//Customer specific discount
+class CustomerDiscount extends Discount {
 	constructor( id, discountPercentage, customerId ) {
 		super(id, discountPercentage);
 		this.customerId = customerId;
@@ -55,14 +67,15 @@ class CustomerSpecificDiscount extends Discount {
 	CalculateDiscount = function( price, productId, customerId ) {
 		let discount = 0.0;
 		if(this.customerId === customerId) {
-			discount = price * (discountPercentage / 100);
+			discount = price * (this.discountPercentage / 100);
 		}
 
 		return discount;
 	}
 }
 
-class ProductSpecificDiscount extends Discount {
+//Product specific discount
+class ProductDiscount extends Discount {
 	constructor( id, discountPercentage, productId) {
 		super(id, discountPercentage);
 		this.productId = productId;
@@ -72,11 +85,11 @@ class ProductSpecificDiscount extends Discount {
 		let discount = 0.0;
 
 		if(this.productId === productId ) {
-			discount = price * (discountPercentage / 100);
+			discount = price * (this.discountPercentage / 100);
 		}
 
 		return discount;
 	}
 }
 
-modules.export = {Discount, GeneralSeasonDiscount, RegularCustomerDiscount, CustomerSpecificDiscount, ProductSpecificDiscount}
+module.exports = {Discount, SeasonDiscount, RegularCustomerDiscount, CustomerDiscount, ProductDiscount, DiscountType}
